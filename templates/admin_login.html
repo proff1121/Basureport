@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Admin Login | Clean Barangay</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #eaf3eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 950px;
+            min-height: 480px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(20, 70, 40, 0.12);
+        }
+
+        .left-panel {
+            width: 42%;
+            background: #176b3a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .logo {
+            width: 85px;
+            height: 85px;
+            background: white;
+            color: #176b3a;
+            border-radius: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            margin-bottom: 25px;
+        }
+
+        .left-panel h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .left-panel p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #dcefe1;
+        }
+
+        .right-panel {
+            width: 58%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 55px 65px;
+        }
+
+        .right-panel h2 {
+            color: #194d2e;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #194d2e;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d4e6d8;
+            border-radius: 9px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #176b3a;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #12552e;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 22px;
+            color: #176b3a;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        @media (max-width: 700px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                width: 100%;
+            }
+
+            .left-panel {
+                padding: 30px 20px;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+
+            .left-panel h1 {
+                font-size: 25px;
+            }
+
+            .right-panel {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="left-panel">
+            <div class="logo">♻</div>
+            <h1>BasuReport</h1>
+            <p>Garbage Reporting System</p>
+        </div>
+
+        <div class="right-panel">
+
+            <h2>Admin Login</h2>
+
+            <p class="description">
+                Sign in to manage garbage reports and monitor collection.
+            </p>
+
+            <form action="#" method="POST">
+
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter admin username"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button type="submit">Login as Admin</button>
+
+            </form>
+
+            <a href="/login" class="back">
+                ← Back to Account Selection
+            </a>
+
+            <div class="footer">
+                © 2026 Clean Barangay
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

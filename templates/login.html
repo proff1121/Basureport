@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Login | Clean Barangay</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #eaf3eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 950px;
+            min-height: 480px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(20, 70, 40, 0.12);
+        }
+
+        /* LEFT SIDE */
+
+        .left-panel {
+            width: 42%;
+            background: #176b3a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .logo {
+            width: 85px;
+            height: 85px;
+            background: white;
+            color: #176b3a;
+            border-radius: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            margin-bottom: 25px;
+        }
+
+        .left-panel h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .left-panel p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #dcefe1;
+        }
+
+        .tagline {
+            margin-top: 35px;
+            font-size: 13px;
+            color: #c4e3ce;
+        }
+
+        /* RIGHT SIDE */
+
+        .right-panel {
+            width: 58%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 55px 65px;
+        }
+
+        .right-panel h2 {
+            color: #194d2e;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .role-card {
+            display: flex;
+            align-items: center;
+            text-align: left;
+            gap: 18px;
+            padding: 20px;
+            border: 1px solid #d4e6d8;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f7fbf7;
+            text-decoration: none;
+        }
+
+        .role-card:hover {
+            border-color: #176b3a;
+            background: #e8f4eb;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(23, 107, 58, 0.10);
+        }
+
+        .role-icon {
+            width: 52px;
+            height: 52px;
+            background: #dcefe1;
+            color: #176b3a;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .role-info h3 {
+            color: #176b3a;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .role-info p {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .arrow {
+            margin-left: auto;
+            color: #176b3a;
+            font-size: 25px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 15px;
+            color: #176b3a;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* MOBILE RESPONSIVE */
+
+        @media (max-width: 700px) {
+            body {
+                padding: 15px;
+            }
+
+            .login-container {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                width: 100%;
+            }
+
+            .left-panel {
+                padding: 35px 20px;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+
+            .left-panel h1 {
+                font-size: 25px;
+            }
+
+            .tagline {
+                margin-top: 15px;
+            }
+
+            .right-panel {
+                padding: 35px 25px;
+            }
+
+            .right-panel h2 {
+                font-size: 24px;
+            }
+
+            .signup-link {
+                text-align: center;
+                 margin-top: 20px;
+            }
+
+           .signup-link p {
+               color: #66816d;
+               font-size: 14px;
+               margin-bottom: 8px;
+               }
+
+            .signup-link a {
+             color: #247a43;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+              }
+
+          .signup-link a:hover {
+           color: #14552d;
+           text-decoration: underline;
+}
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="left-panel">
+
+            <div class="logo">♻</div>
+
+            <h1>BasuReport</h1>
+
+            <p>
+                Garbage Reporting System
+            </p>
+
+            <div class="tagline">
+                Keep Our Community Clean
+            </div>
+
+        </div>
+
+        <div class="right-panel">
+
+            <h2>Welcome Back!</h2>
+
+            <p class="description">
+                Choose your account type to continue.
+            </p>
+
+            <a href="/admin-login" class="role-card">
+
+                <div class="role-icon">🛡</div>
+
+                <div class="role-info">
+                    <h3>Admin</h3>
+                    <p>Manage reports and monitor garbage collection.</p>
+                </div>
+
+                <span class="arrow">›</span>
+
+            </a>
+
+            <a href="/resident-login" class="role-card">
+
+                <div class="role-icon">👤</div>
+
+                <div class="role-info">
+                    <h3>User / Resident</h3>
+                    <p>Submit garbage reports and track their status.</p>
+                </div>
+
+                  <div class="signup-link">
+               <p>Don't have an account?</p>
+               <a href="/signup">Sign Up</a>
+               </div> 
+
+                <span class="arrow">›</span>
+
+            </a>
+
+            <a href="/" class="back">
+                ← Back to Home
+            </a>
+
+            <div class="footer">
+                © 2026 BasuReport
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

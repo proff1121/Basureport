@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Sign Up | BasuReport</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f3f8f1;
+            color: #174d2b;
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        body.fade-out {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 25px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #176b3a;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #247a43;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #14552d;
+            transform: translateX(-3px);
+        }
+
+        /* MAIN */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 20px 45px;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 22px;
+            box-shadow: 0 12px 40px rgba(28, 88, 48, 0.08);
+            border: 1px solid #e5eee4;
+            animation: appear 0.6s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-circle {
+            width: 65px;
+            height: 65px;
+            background: #e5f3e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 18px;
+        }
+
+        .signup-card h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #174d2b;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #829486;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #315d3d;
+            margin-bottom: 9px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #dce8dc;
+            background: #f8faf7;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            color: #174d2b;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #299653;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(41, 150, 83, 0.10);
+        }
+
+        .form-group input::placeholder {
+            color: #a2b0a5;
+        }
+
+        /* BUTTON */
+        .signup-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #247a43;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+
+        .signup-btn:hover {
+            background: #14552d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(36, 122, 67, 0.2);
+        }
+
+        /* LOGIN LINK */
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #829486;
+        }
+
+        .login-link a {
+            color: #247a43;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: #edf1ed;
+            margin-top: 25px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #829486;
+            font-size: 12px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 500px) {
+            header {
+                padding: 20px 6%;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .signup-card {
+                padding: 30px 22px;
+                border-radius: 18px;
+            }
+
+            .signup-card h1 {
+                font-size: 26px;
+            }
+
+            .main-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">♻ BasuReport</a>
+
+        <a href="/login" class="back-btn">
+            ← Back to Login
+        </a>
+    </header>
+
+    <!-- SIGN UP FORM -->
+    <main class="main-container">
+
+        <div class="signup-card">
+
+            <div class="icon-circle">🌱</div>
+
+            <h1>Create Account</h1>
+
+            <p class="subtitle">
+                Join us in building a cleaner and healthier community.
+            </p>
+
+            <form action="/signup" method="POST">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+
+            <div style="
+            background: #e5f3e6;
+            color: #176b3a;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            text-align: center;
+        ">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+            
+        </div>
+    {% endif %}
+{% endwith %}
+
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="signup-btn">
+                    CREATE ACCOUNT →
+                </button>
+
+            </form>
+
+            <div class="divider"></div>
+
+            <p class="login-link">
+                Already have an account?
+                <a href="/login">Login</a>
+            </p>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 BasuReport | Building a Cleaner Community
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href]').forEach(function(link) {
+            link.addEventListener("click", function(event) {
+
+                const destination = this.href;
+
+                if (
+                    this.hostname === window.location.hostname &&
+                    !this.hasAttribute("target")
+                ) {
+                    event.preventDefault();
+
+                    document.body.classList.add("fade-out");
+
+                    setTimeout(function() {
+                        window.location.href = destination;
+                    }, 400);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

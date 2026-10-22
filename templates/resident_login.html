@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Resident Login - Clean Barangay</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #eaf3eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 950px;
+            min-height: 480px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .left-panel {
+            width: 42%;
+            background: #176b3a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .logo {
+            font-size: 65px;
+            margin-bottom: 20px;
+        }
+
+        .left-panel h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .left-panel p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #e0f2e5;
+        }
+
+        .right-panel {
+            width: 58%;
+            padding: 55px 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel h2 {
+            color: #176b3a;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #d5dfd7;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #176b3a;
+            box-shadow: 0 0 0 2px rgba(23, 107, 58, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #176b3a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #12572e;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #176b3a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                width: 100%;
+            }
+
+            .left-panel {
+                padding: 30px 20px;
+            }
+
+            .left-panel h1 {
+                font-size: 26px;
+            }
+
+            .logo {
+                font-size: 45px;
+            }
+
+            .right-panel {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="left-panel">
+            <div class="logo">♻</div>
+            <h1>BasuReport</h1>
+            <p>Garbage Reporting System</p>
+            <br>
+            <p>Keep Our Community Clean</p>
+        </div>
+
+        <div class="right-panel">
+            <h2>Resident Login</h2>
+            <p class="subtitle">
+                Welcome! Login to submit garbage reports and track their status.
+            </p>
+
+            <form action="resident-login" method="POST">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login as Resident
+                </button>
+
+            </form>
+
+            <p style="
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+    color: #777;
+">
+    Don't have an account?
+    <a href="/signup" style="
+        color: #176b3a;
+        font-weight: bold;
+        text-decoration: none;
+    ">
+        Create Account
+    </a>
+</p>
+
+<a href="/login" class="back">← Back to Login Options</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

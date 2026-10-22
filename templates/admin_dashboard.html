@@ -1,0 +1,1141 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BasuReport | Admin Dashboard</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+:root{--green:#14532d;--light:#dcfce7;--main:#16a34a;--text:#26352b;--muted:#6b7280;--border:#e5e7eb;--bg:#f4f7f4;--red:#dc2626}
+body{background:var(--bg);color:var(--text)}
+.sidebar{width:240px;height:100vh;background:var(--green);color:white;position:fixed;top:0;left:0;padding:25px 18px;z-index:100}
+.logo{font-size:25px;font-weight:bold;margin-bottom:45px}
+.logo span{color:#86efac}
+.nav-link{display:block;color:#e5e7eb;text-decoration:none;padding:14px 15px;border-radius:8px;margin-bottom:10px}
+.nav-link:hover,.nav-link.active{background:#166534;color:white}
+.logout{position:absolute;bottom:25px;left:18px;right:18px;background:#dc2626}
+.main{margin-left:240px;padding:30px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px}
+.topbar h1{font-size:27px}
+.topbar-right{display:flex;align-items:center;gap:15px}
+.admin-label{background:var(--light);color:#166534;padding:10px 17px;border-radius:20px;font-weight:bold;white-space:nowrap}
+.notification-wrapper{position:relative}
+.notification-bell{position:relative;width:45px;height:45px;border:1px solid var(--border);border-radius:50%;background:white;font-size:22px;cursor:pointer}
+.notification-badge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:20px;background:var(--red);color:white;font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;border:2px solid white}
+.notification-panel{display:none;position:absolute;top:58px;right:0;width:360px;max-width:calc(100vw - 85px);background:white;border-radius:12px;box-shadow:0 8px 30px #0002;z-index:1000;overflow:hidden;border:1px solid var(--border)}
+.notification-panel.show{display:block}
+.notification-header{padding:17px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.mark-all-btn{border:none;background:none;color:#15803d;font-size:12px;font-weight:bold;cursor:pointer}
+.notification-list{max-height:390px;overflow-y:auto}
+.notification-item{display:flex;gap:12px;padding:15px;border-bottom:1px solid #f1f5f9;cursor:pointer}
+.notification-item:hover{background:#f8fafc}
+.notification-item.unread{background:#f0fdf4}
+.notification-icon{width:36px;height:36px;min-width:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#dbeafe}
+.notification-icon.urgent{background:#fee2e2}
+.notification-icon.completed{background:#dcfce7}
+.notification-content{flex:1;min-width:0}
+.notification-content h4{font-size:13px;margin-bottom:5px}
+.notification-content p{font-size:12px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
+.notification-time{display:block;font-size:11px;color:#9ca3af;margin-top:7px}
+.notification-dot{width:8px;height:8px;min-width:8px;background:var(--main);border-radius:50%;margin-top:5px}
+.notification-empty{padding:35px 15px;text-align:center;color:#9ca3af;font-size:13px}
+.notification-footer{padding:12px;text-align:center;border-top:1px solid var(--border);color:#15803d;font-size:12px;font-weight:bold}
+.welcome{margin-bottom:25px}
+.welcome p{color:var(--muted);margin-top:7px}
+.live-indicator{display:inline-flex;align-items:center;gap:7px;color:#15803d;font-size:13px;font-weight:bold;margin-top:12px}
+.live-dot{width:9px;height:9px;background:#22c55e;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px;margin-bottom:30px}
+.stat-card{background:white;padding:22px;border-radius:12px;box-shadow:0 3px 12px #0000000d;border-left:5px solid var(--main)}
+.stat-card.pending{border-color:#f59e0b}
+.stat-card.progress{border-color:#3b82f6}
+.stat-card.completed{border-color:#16a34a}
+.stat-card.urgent{border-color:var(--red)}
+.stat-card h3{font-size:13px;color:var(--muted);margin-bottom:13px}
+.stat-card h2{font-size:30px}
+.urgent-container,.reports-container{background:white;border-radius:14px;padding:25px;margin-bottom:30px;box-shadow:0 3px 12px #0000000d}
+.urgent-container{border-top:4px solid var(--red)}
+.urgent-header,.reports-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.urgent-header h2{font-size:20px;color:#b91c1c}
+.urgent-count,.urgent-badge{display:inline-block;background:#fee2e2;color:#b91c1c;padding:7px 11px;border-radius:20px;font-size:11px;font-weight:bold}
+.urgent-item{background:#fff7f7;border:1px solid #fecaca;border-left:4px solid var(--red);border-radius:8px;padding:15px;margin-bottom:12px}
+.urgent-item p{color:var(--muted);font-size:13px;margin-top:7px;overflow-wrap:anywhere}
+.urgent-empty{text-align:center;padding:25px;color:#16a34a;background:#f0fdf4;border-radius:8px}
+.reports-heading p{color:var(--muted);font-size:13px;margin-top:7px;line-height:1.5}
+.report-count-label{background:#f0fdf4;color:#166534;padding:9px 13px;border-radius:20px;font-size:12px;font-weight:bold;white-space:nowrap}
+.report-filters{display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,200px) minmax(150px,200px);gap:12px;padding:17px;background:#f8fafc;border:1px solid #eef2f7;border-radius:12px;margin-bottom:22px}
+.filter-group{display:flex;flex-direction:column;gap:7px}
+.filter-group label{font-size:12px;color:#475569;font-weight:bold}
+.filter-control{width:100%;min-width:0;padding:11px 12px;background:white;border:1px solid #d1d5db;border-radius:8px;color:var(--text);font-size:13px;outline:none}
+.filter-control:focus{border-color:#16a34a;box-shadow:0 0 0 3px #16a34a1a}
+.filter-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;color:var(--muted);font-size:12px}
+.reset-filters{border:none;background:none;color:#15803d;font-weight:bold;cursor:pointer;font-size:12px}
+.reports-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.report-card{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;min-width:0;transition:box-shadow .2s}
+.report-card:hover{box-shadow:0 8px 24px #0f172a17}
+.report-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 18px 14px}
+.report-id{font-size:12px;color:#64748b;font-weight:bold;margin-bottom:7px}
+.report-resident{font-size:17px;font-weight:bold;overflow-wrap:anywhere}
+.report-date{font-size:12px;color:var(--muted);margin-top:6px}
+.report-badges{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+.status{display:inline-block;padding:7px 10px;border-radius:20px;font-size:11px;font-weight:bold;white-space:nowrap}
+.status.pending{background:#fef3c7;color:#92400e}
+.status.progress{background:#dbeafe;color:#1d4ed8}
+.status.completed{background:#dcfce7;color:#166534}
+.report-location{padding:0 18px 14px;font-size:13px;color:#475569;overflow-wrap:anywhere}
+.report-description{margin:0 18px 17px;padding:12px;border-radius:9px;background:#f8fafc;color:#475569;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.report-description strong{display:block;color:#334155;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.report-photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 18px 18px}
+.photo-box{min-width:0}
+.photo-label{font-size:11px;font-weight:bold;color:#475569;margin-bottom:8px}
+.photo-label.before:before{content:"●";color:#dc2626;margin-right:6px}
+.photo-label.after:before{content:"●";color:#16a34a;margin-right:6px}
+.report-photo{display:block;width:100%;height:145px;object-fit:cover;background:#f1f5f9;border:1px solid var(--border);border-radius:9px;cursor:zoom-in}
+.photo-missing{width:100%;height:145px;border:1px dashed #cbd5e1;border-radius:9px;background:#f8fafc;color:#94a3b8;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px;font-size:11px;padding:10px}
+.photo-missing span{font-size:24px}
+.report-card-footer{padding:16px 18px 18px;border-top:1px solid #eef2f7;background:#fcfdfc}
+.report-footer-details{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.duration-label{font-size:12px;color:var(--muted)}
+.duration{font-size:12px;font-weight:bold;color:#475569}
+.duration.urgent{color:var(--red)}
+.report-actions form{width:100%}
+.action-btn,.complete-btn{border:none;width:100%;padding:12px 14px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:13px;margin-top:8px}
+.action-btn{background:#dbeafe;color:#1d4ed8}
+.action-btn:hover{background:#bfdbfe}
+.complete-btn{background:#16a34a;color:white}
+.complete-btn:hover{background:#15803d}
+.action-btn:disabled,.complete-btn:disabled{opacity:.6;cursor:wait}
+.upload-label{display:block;color:#475569;font-size:12px;font-weight:bold;margin-bottom:7px}
+.upload-input{display:block;width:100%;max-width:100%;padding:9px;font-size:12px;border:1px solid #d1d5db;background:white;border-radius:8px}
+.completed-label{display:block;text-align:center;padding:12px;color:#166534;background:#dcfce7;border-radius:8px;font-weight:bold;font-size:13px}
+.no-reports{grid-column:1/-1;text-align:center;padding:50px 20px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;color:#64748b}
+.no-reports .empty-icon{font-size:38px;margin-bottom:12px}
+.no-reports h3{font-size:17px;color:#334155;margin-bottom:7px}
+.no-reports p{font-size:13px;line-height:1.5}
+.last-updated{color:#9ca3af;font-size:12px;margin-top:18px;text-align:right}
+.flash-message{background:#dcfce7;color:#166534;border:1px solid #86efac;padding:13px 16px;border-radius:8px;margin-bottom:20px}
+.action-message{display:none;padding:12px 15px;border-radius:8px;margin-bottom:18px;font-size:13px}
+.action-message.show{display:block}
+.action-message.success{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.action-message.error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.photo-modal{display:none;position:fixed;inset:0;background:#000e;z-index:2000;padding:30px;align-items:center;justify-content:center;cursor:zoom-out}
+.photo-modal.show{display:flex}
+.photo-modal img{max-width:95%;max-height:90vh;object-fit:contain;border-radius:8px}
+.photo-modal button{position:absolute;top:15px;right:25px;color:white;background:transparent;border:none;font-size:36px;cursor:pointer}
+@media(max-width:1400px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1000px){.main{padding:22px}.reports-grid{grid-template-columns:1fr}.report-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-group:first-child{grid-column:1/-1}}
+@media(max-width:600px){
+.sidebar{width:65px;padding:20px 8px}
+.logo{font-size:0;text-align:center}
+.logo:first-letter{font-size:24px}
+.nav-link{font-size:0;text-align:center;padding:14px 5px}
+.nav-link:first-letter{font-size:18px}
+.main{margin-left:65px;padding:13px}
+.topbar{align-items:flex-start;gap:10px}
+.topbar h1{font-size:20px}
+.topbar-right{gap:7px}
+.admin-label{font-size:10px;padding:8px}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat-card{padding:15px}
+.stat-card h3{font-size:11px}
+.stat-card h2{font-size:25px}
+.urgent-container,.reports-container{padding:14px}
+.reports-header{align-items:flex-start;flex-direction:column}
+.report-count-label{align-self:flex-start}
+.report-filters{grid-template-columns:1fr;padding:12px}
+.filter-group:first-child{grid-column:auto}
+.report-photos{gap:8px;padding:0 12px 15px}
+.report-card-top{padding:15px 12px 12px}
+.report-location{padding:0 12px 12px}
+.report-description{margin:0 12px 14px}
+.report-card-footer{padding:14px 12px}
+.report-photo,.photo-missing{height:115px}
+.report-resident{font-size:14px}
+.report-badges{gap:5px}
+.status{font-size:10px;padding:6px 8px}
+.notification-panel{right:-45px;width:310px}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">Basu<span>Report</span></div>
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-link active">▦ Dashboard</a>
+    <a href="#reports" class="nav-link">▤ Manage Reports</a>
+    <a href="{{ url_for('logout') }}" class="nav-link logout">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <h1>Admin Dashboard</h1>
+
+    <div class="topbar-right">
+        <div class="notification-wrapper">
+            <button type="button" class="notification-bell" id="notificationBell" aria-label="Notifications" aria-expanded="false">
+                🔔
+                <span class="notification-badge" id="notificationBadge" style="display:none">0</span>
+            </button>
+
+            <div class="notification-panel" id="notificationPanel">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button type="button" class="mark-all-btn" id="markAllReadBtn">Mark all as read</button>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <div class="notification-empty">Loading notifications...</div>
+                </div>
+                <div class="notification-footer">BasuReport Admin Alerts</div>
+            </div>
+        </div>
+
+        <div class="admin-label">Administrator</div>
+    </div>
+</header>
+
+<section class="welcome">
+    <h2>Welcome, Admin!</h2>
+    <p>Monitor and manage garbage reports in your barangay.</p>
+    <div class="live-indicator"><span class="live-dot"></span> Live Updates Enabled</div>
+</section>
+
+<div class="action-message" id="actionMessage" role="status" aria-live="polite"></div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<section class="stats">
+    <div class="stat-card">
+        <h3>Total Reports</h3>
+        <h2 id="totalReports">{{ total_reports }}</h2>
+    </div>
+    <div class="stat-card pending">
+        <h3>Pending Reports</h3>
+        <h2 id="pendingReports">{{ pending_reports }}</h2>
+    </div>
+    <div class="stat-card progress">
+        <h3>In Progress</h3>
+        <h2 id="inProgressReports">{{ in_progress_reports }}</h2>
+    </div>
+    <div class="stat-card completed">
+        <h3>Completed</h3>
+        <h2 id="completedReports">{{ completed_reports }}</h2>
+    </div>
+    <div class="stat-card urgent">
+        <h3>Urgent Reports</h3>
+        <h2 id="urgentReports">{{ urgent_reports }}</h2>
+    </div>
+</section>
+
+<section class="urgent-container">
+    <div class="urgent-header">
+        <h2>🔴 Urgent Reports</h2>
+        <span class="urgent-count" id="urgentCount">{{ urgent_reports }} Urgent</span>
+    </div>
+
+    <div id="urgentList">
+        {% set urgent_found = namespace(value=false) %}
+        {% for report in reports %}
+            {% if report.is_urgent %}
+                {% set urgent_found.value = true %}
+                <div class="urgent-item">
+                    <strong>{{ report.id }}</strong>
+                    <span class="urgent-badge">URGENT</span>
+                    <p>Resident: {{ report.fullname }}</p>
+                    <p>Location: {{ report.sitio }}</p>
+                    <p>Description: {{ report.description }}</p>
+                    <p>Pending Duration: <strong>{{ report.duration }}</strong></p>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if not urgent_found.value %}
+            <div class="urgent-empty">✓ No urgent reports at the moment.</div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="reports-container" id="reports">
+    <div class="reports-header">
+        <div class="reports-heading">
+            <h2>Manage Reports</h2>
+            <p>Review reported locations, compare photos, and manage cleanup progress.</p>
+        </div>
+        <span class="report-count-label" id="reportCountLabel">{{ total_reports }} Reports</span>
+    </div>
+
+    <div class="report-filters">
+        <div class="filter-group">
+            <label for="statusFilter">Filter by Status</label>
+            <select id="statusFilter" class="filter-control">
+                <option value="all">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="urgentFilter">Priority</label>
+            <select id="urgentFilter" class="filter-control">
+                <option value="all">All Reports</option>
+                <option value="urgent">Urgent Only</option>
+                <option value="normal">Normal Only</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="sortFilter">Sort Reports</label>
+            <select id="sortFilter" class="filter-control">
+                <option value="default">Default Order</option>
+                <option value="id-desc">Report ID (Descending)</option>
+                <option value="id-asc">Report ID (Ascending)</option>
+                <option value="urgent-first">Urgent First</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="filter-summary">
+        <span id="filterSummary">Showing all reports</span>
+        <button type="button" class="reset-filters" id="resetFilters">Reset Filters</button>
+    </div>
+
+    <div class="reports-grid" id="reportsGrid">
+        {% for report in reports %}
+        <article class="report-card"
+                 data-report-id="{{ report.id }}"
+                 data-status="{{ report.status }}"
+                 data-urgent="{{ 'urgent' if report.is_urgent else 'normal' }}">
+
+            <div class="report-card-top">
+                <div>
+                    <div class="report-id">REPORT #{{ report.id }}</div>
+                    <div class="report-resident">{{ report.fullname }}</div>
+                    <div class="report-date">📅 {{ report.date }}</div>
+                </div>
+
+                <div class="report-badges">
+                    {% if report.status == "Pending" %}
+                        <span class="status pending">Pending</span>
+                    {% elif report.status == "In Progress" %}
+                        <span class="status progress">In Progress</span>
+                    {% else %}
+                        <span class="status completed">Completed</span>
+                    {% endif %}
+
+                    {% if report.is_urgent %}
+                        <span class="urgent-badge">🚨 URGENT</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="report-location">📍 <strong>Location:</strong> {{ report.sitio }}</div>
+            <div class="report-description"><strong>Report Description</strong>{{ report.description }}</div>
+
+            <div class="report-photos">
+                <div class="photo-box">
+                    <div class="photo-label before">Before Cleaning</div>
+                    {% if report.image %}
+                        <a href="{{ url_for('uploaded_file', filename=report.image) }}" target="_blank" rel="noopener noreferrer">
+                            <img class="report-photo" src="{{ url_for('uploaded_file', filename=report.image) }}" alt="Original report photo" loading="lazy">
+                        </a>
+                    {% else %}
+                        <div class="photo-missing"><span>📷</span>No original photo</div>
+                    {% endif %}
+                </div>
+
+                <div class="photo-box">
+                    <div class="photo-label after">After Cleaning</div>
+                    {% if report.clean_image %}
+                        <a href="{{ url_for('uploaded_file', filename=report.clean_image) }}" target="_blank" rel="noopener noreferrer">
+                            <img class="report-photo" src="{{ url_for('uploaded_file', filename=report.clean_image) }}" alt="After cleaning photo" loading="lazy">
+                        </a>
+                    {% else %}
+                        <div class="photo-missing">
+                            <span>🧹</span>
+                            {% if report.status == "Completed" %}After photo unavailable{% else %}Not cleaned yet{% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="report-card-footer">
+                <div class="report-footer-details">
+                    <span class="duration-label">⏱ Report Duration</span>
+                    <span class="duration {% if report.is_urgent %}urgent{% endif %}">{{ report.duration }}</span>
+                </div>
+
+                <div class="report-actions">
+                    {% if report.status == "Pending" %}
+                    <form class="start-cleaning-form" action="{{ url_for('start_cleaning', report_id=report.id) }}" method="POST">
+                        <button type="submit" class="action-btn">🧹 Start Cleaning</button>
+                    </form>
+                    {% elif report.status == "In Progress" %}
+                    <form class="complete-report-form" action="{{ url_for('complete_report', report_id=report.id) }}" method="POST" enctype="multipart/form-data">
+                        <label class="upload-label">Upload After-Cleaning Photo</label>
+                        <input type="file" name="clean-image" class="upload-input" accept=".jpg,.jpeg,.png,.gif,.webp" required>
+                        <button type="submit" class="complete-btn">✓ Complete Report</button>
+                    </form>
+                    {% else %}
+                    <span class="completed-label">✓ Cleanup Completed</span>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% else %}
+        <div class="no-reports">
+            <div class="empty-icon">🗑️</div>
+            <h3>No Reports Yet</h3>
+            <p>Garbage reports submitted by residents will appear here.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="last-updated">Last updated: <span id="lastUpdated">Loading...</span></div>
+</section>
+
+</main>
+
+<div class="photo-modal" id="photoModal" role="dialog" aria-modal="true">
+    <button type="button" id="closePhotoModal" aria-label="Close photo preview">&times;</button>
+    <img id="modalPhoto" src="" alt="Enlarged report photo">
+</div>
+
+<script>
+"use strict";
+
+const reportsGrid = document.getElementById("reportsGrid");
+const statusFilter = document.getElementById("statusFilter");
+const urgentFilter = document.getElementById("urgentFilter");
+const sortFilter = document.getElementById("sortFilter");
+const resetFilters = document.getElementById("resetFilters");
+const reportCountLabel = document.getElementById("reportCountLabel");
+const filterSummary = document.getElementById("filterSummary");
+const urgentList = document.getElementById("urgentList");
+
+const notificationBell = document.getElementById("notificationBell");
+const notificationPanel = document.getElementById("notificationPanel");
+const notificationList = document.getElementById("notificationList");
+const notificationBadge = document.getElementById("notificationBadge");
+const markAllReadBtn = document.getElementById("markAllReadBtn");
+
+const photoModal = document.getElementById("photoModal");
+const modalPhoto = document.getElementById("modalPhoto");
+const closePhotoModal = document.getElementById("closePhotoModal");
+const actionMessage = document.getElementById("actionMessage");
+
+let notificationData = [];
+let notificationPanelOpen = false;
+let dashboardRequestRunning = false;
+let dashboardRefreshPending = false;
+let notificationRequestRunning = false;
+let latestReports = [];
+let isStartingReport = false;
+let messageTimeout = null;
+
+const FILTER_STORAGE_KEY = "basuReportAdminFilters";
+const ORDER_STORAGE_KEY = "basuReportAdminOrder";
+
+function readStoredJSON(key, fallback) {
+    try {
+        const value = sessionStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
+function saveFilters() {
+    try {
+        sessionStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
+            status: statusFilter.value,
+            urgency: urgentFilter.value,
+            sort: sortFilter.value
+        }));
+    } catch (error) {
+        console.warn("Unable to save filters:", error);
+    }
+}
+
+function restoreFilters() {
+    const saved = readStoredJSON(FILTER_STORAGE_KEY, null);
+    if (!saved) return;
+
+    if (["all", "Pending", "In Progress", "Completed"].includes(saved.status)) {
+        statusFilter.value = saved.status;
+    }
+
+    if (["all", "urgent", "normal"].includes(saved.urgency)) {
+        urgentFilter.value = saved.urgency;
+    }
+
+    if (["default", "id-desc", "id-asc", "urgent-first"].includes(saved.sort)) {
+        sortFilter.value = saved.sort;
+    }
+}
+
+const reportOrder = new Map();
+let nextReportOrder = 0;
+
+function initializeOrder() {
+    const savedOrder = readStoredJSON(ORDER_STORAGE_KEY, []);
+
+    if (Array.isArray(savedOrder)) {
+        savedOrder.forEach(id => {
+            const key = String(id);
+            if (!reportOrder.has(key)) {
+                reportOrder.set(key, nextReportOrder++);
+            }
+        });
+    }
+
+    document.querySelectorAll("#reportsGrid .report-card").forEach(card => {
+        const id = String(card.dataset.reportId);
+        if (!reportOrder.has(id)) {
+            reportOrder.set(id, nextReportOrder++);
+        }
+    });
+
+    saveOrder();
+}
+
+function saveOrder() {
+    try {
+        sessionStorage.setItem(
+            ORDER_STORAGE_KEY,
+            JSON.stringify(Array.from(reportOrder.keys()))
+        );
+    } catch (error) {
+        console.warn("Unable to save report order:", error);
+    }
+}
+
+function registerReports(reports) {
+    reports.forEach(report => {
+        const id = String(report.id);
+        if (!reportOrder.has(id)) {
+            reportOrder.set(id, nextReportOrder++);
+        }
+    });
+
+    saveOrder();
+}
+
+function escapeHTML(value) {
+    const entities = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    };
+
+    return String(value ?? "").replace(/[&<>"']/g, ch => entities[ch]);
+}
+
+function getPhotoURL(filename) {
+    return filename
+        ? "/uploads/" + encodeURIComponent(String(filename))
+        : "";
+}
+
+function formatNotificationTime(dateString) {
+    if (!dateString) return "";
+
+    const date = new Date(String(dateString).replace(" ", "T"));
+
+    return Number.isNaN(date.getTime())
+        ? String(dateString)
+        : date.toLocaleString();
+}
+
+function getNotificationIcon(type) {
+    return {
+        new_report: "🆕",
+        urgent: "🚨",
+        in_progress: "🧹",
+        completed: "✅"
+    }[type] || "🔔";
+}
+
+function showActionMessage(message, type = "success") {
+    if (messageTimeout) {
+        clearTimeout(messageTimeout);
+    }
+
+    actionMessage.textContent = message;
+    actionMessage.className = `action-message show ${type}`;
+
+    messageTimeout = setTimeout(() => {
+        actionMessage.className = "action-message";
+        actionMessage.textContent = "";
+    }, 4500);
+}
+
+function updateNotificationBadge(unreadCount) {
+    const count = Math.max(0, Number(unreadCount) || 0);
+
+    notificationBadge.style.display = count > 0 ? "flex" : "none";
+    notificationBadge.textContent = count > 99 ? "99+" : String(count);
+}
+
+function renderNotifications(items) {
+    if (!Array.isArray(items) || items.length === 0) {
+        notificationList.innerHTML =
+            '<div class="notification-empty">🔔 No notifications yet.<br><br>New garbage reports will appear here.</div>';
+        return;
+    }
+
+    notificationList.innerHTML = items.map(n => `
+        <div class="notification-item ${n.is_read ? "" : "unread"}"
+             data-notification-id="${escapeHTML(n.id)}">
+            <div class="notification-icon ${escapeHTML(n.type)}">${getNotificationIcon(n.type)}</div>
+            <div class="notification-content">
+                <h4>${escapeHTML(n.title)}</h4>
+                <p>${escapeHTML(n.message)}</p>
+                <span class="notification-time">${escapeHTML(formatNotificationTime(n.created_at))}</span>
+            </div>
+            ${n.is_read ? "" : '<span class="notification-dot"></span>'}
+        </div>
+    `).join("");
+}
+
+async function refreshNotifications() {
+    if (notificationRequestRunning) return;
+
+    notificationRequestRunning = true;
+
+    try {
+        const response = await fetch("/api/admin/notifications", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) throw new Error("Unable to load notifications.");
+
+        const data = await response.json();
+        if (data.success === false) return;
+
+        notificationData = Array.isArray(data.notifications)
+            ? data.notifications
+            : [];
+
+        updateNotificationBadge(data.unread ?? 0);
+        renderNotifications(notificationData);
+    } catch (error) {
+        console.error("Notification error:", error);
+    } finally {
+        notificationRequestRunning = false;
+    }
+}
+
+notificationBell.addEventListener("click", event => {
+    event.stopPropagation();
+
+    notificationPanelOpen = !notificationPanelOpen;
+    notificationPanel.classList.toggle("show", notificationPanelOpen);
+    notificationBell.setAttribute("aria-expanded", String(notificationPanelOpen));
+
+    if (notificationPanelOpen) refreshNotifications();
+});
+
+document.addEventListener("click", event => {
+    if (!event.target.closest(".notification-wrapper")) {
+        notificationPanelOpen = false;
+        notificationPanel.classList.remove("show");
+        notificationBell.setAttribute("aria-expanded", "false");
+    }
+});
+
+notificationList.addEventListener("click", async event => {
+    const item = event.target.closest(".notification-item");
+    if (!item) return;
+
+    const id = item.dataset.notificationId;
+    const notification = notificationData.find(
+        n => String(n.id) === String(id)
+    );
+
+    if (!notification || notification.is_read) return;
+
+    try {
+        const response = await fetch(
+            `/api/admin/notifications/${encodeURIComponent(id)}/read`,
+            { method: "POST" }
+        );
+
+        if (!response.ok) throw new Error("Unable to update notification.");
+
+        const data = await response.json();
+
+        if (data.success) {
+            notification.is_read = true;
+            updateNotificationBadge(data.unread ?? 0);
+            renderNotifications(notificationData);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+markAllReadBtn.addEventListener("click", async () => {
+    try {
+        const response = await fetch("/api/admin/notifications/read-all", {
+            method: "POST"
+        });
+
+        if (!response.ok) throw new Error("Unable to update notifications.");
+
+        const data = await response.json();
+
+        if (data.success) {
+            notificationData.forEach(n => n.is_read = true);
+            updateNotificationBadge(0);
+            renderNotifications(notificationData);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+function getStatusHTML(report) {
+    if (report.status === "Pending") {
+        return '<span class="status pending">Pending</span>';
+    }
+
+    if (report.status === "In Progress") {
+        return '<span class="status progress">In Progress</span>';
+    }
+
+    return '<span class="status completed">Completed</span>';
+}
+
+function getPhotosHTML(report) {
+    const beforeURL = getPhotoURL(report.image);
+    const afterURL = getPhotoURL(report.clean_image);
+
+    const before = beforeURL
+        ? `<a href="${beforeURL}" target="_blank" rel="noopener noreferrer"><img class="report-photo" src="${beforeURL}" alt="Original report photo" loading="lazy"></a>`
+        : '<div class="photo-missing"><span>📷</span>No original photo</div>';
+
+    const after = afterURL
+        ? `<a href="${afterURL}" target="_blank" rel="noopener noreferrer"><img class="report-photo" src="${afterURL}" alt="After cleaning photo" loading="lazy"></a>`
+        : `<div class="photo-missing"><span>🧹</span>${report.status === "Completed" ? "After photo unavailable" : "Not cleaned yet"}</div>`;
+
+    return `
+        <div class="photo-box">
+            <div class="photo-label before">Before Cleaning</div>
+            ${before}
+        </div>
+        <div class="photo-box">
+            <div class="photo-label after">After Cleaning</div>
+            ${after}
+        </div>
+    `;
+}
+
+function getActionHTML(report) {
+    const id = encodeURIComponent(report.id);
+
+    if (report.status === "Pending") {
+        return `
+            <form class="start-cleaning-form" action="/start-cleaning/${id}" method="POST">
+                <button type="submit" class="action-btn">🧹 Start Cleaning</button>
+            </form>
+        `;
+    }
+
+    if (report.status === "In Progress") {
+        return `
+            <form class="complete-report-form" action="/complete-report/${id}" method="POST" enctype="multipart/form-data">
+                <label class="upload-label">Upload After-Cleaning Photo</label>
+                <input type="file" name="clean-image" class="upload-input" accept=".jpg,.jpeg,.png,.gif,.webp" required>
+                <button type="submit" class="complete-btn">✓ Complete Report</button>
+            </form>
+        `;
+    }
+
+    return '<span class="completed-label">✓ Cleanup Completed</span>';
+}
+
+function createReportCard(report) {
+    const urgentBadge = report.is_urgent
+        ? '<span class="urgent-badge">🚨 URGENT</span>'
+        : "";
+
+    return `
+        <article class="report-card"
+                 data-report-id="${escapeHTML(report.id)}"
+                 data-status="${escapeHTML(report.status)}"
+                 data-urgent="${report.is_urgent ? "urgent" : "normal"}">
+
+            <div class="report-card-top">
+                <div>
+                    <div class="report-id">REPORT #${escapeHTML(report.id)}</div>
+                    <div class="report-resident">${escapeHTML(report.fullname)}</div>
+                    <div class="report-date">📅 ${escapeHTML(report.date)}</div>
+                </div>
+                <div class="report-badges">
+                    ${getStatusHTML(report)}
+                    ${urgentBadge}
+                </div>
+            </div>
+
+            <div class="report-location">📍 <strong>Location:</strong> ${escapeHTML(report.sitio)}</div>
+            <div class="report-description"><strong>Report Description</strong>${escapeHTML(report.description)}</div>
+
+            <div class="report-photos">${getPhotosHTML(report)}</div>
+
+            <div class="report-card-footer">
+                <div class="report-footer-details">
+                    <span class="duration-label">⏱ Report Duration</span>
+                    <span class="duration ${report.is_urgent ? "urgent" : ""}">${escapeHTML(report.duration)}</span>
+                </div>
+                <div class="report-actions">${getActionHTML(report)}</div>
+            </div>
+        </article>
+    `;
+}
+
+function applyReportFilters() {
+    saveFilters();
+
+    const selectedStatus = statusFilter.value;
+    const selectedUrgency = urgentFilter.value;
+    const selectedSort = sortFilter.value;
+
+    const filtered = latestReports.filter(report => {
+        const statusOK =
+            selectedStatus === "all" || report.status === selectedStatus;
+
+        const urgencyOK =
+            selectedUrgency === "all" ||
+            (selectedUrgency === "urgent" && Boolean(report.is_urgent)) ||
+            (selectedUrgency === "normal" && !Boolean(report.is_urgent));
+
+        return statusOK && urgencyOK;
+    });
+
+    if (selectedSort === "default") {
+        filtered.sort((a, b) =>
+            (reportOrder.get(String(a.id)) ?? 0) -
+            (reportOrder.get(String(b.id)) ?? 0)
+        );
+    } else if (selectedSort === "id-desc") {
+        filtered.sort((a, b) =>
+            String(b.id).localeCompare(String(a.id), undefined, { numeric: true })
+        );
+    } else if (selectedSort === "id-asc") {
+        filtered.sort((a, b) =>
+            String(a.id).localeCompare(String(b.id), undefined, { numeric: true })
+        );
+    } else if (selectedSort === "urgent-first") {
+        filtered.sort((a, b) =>
+            Number(Boolean(b.is_urgent)) - Number(Boolean(a.is_urgent)) ||
+            (reportOrder.get(String(a.id)) ?? 0) -
+            (reportOrder.get(String(b.id)) ?? 0)
+        );
+    }
+
+    if (filtered.length === 0) {
+        reportsGrid.innerHTML = `
+            <div class="no-reports">
+                <div class="empty-icon">🔎</div>
+                <h3>No Matching Reports</h3>
+                <p>Walang report na tumutugma sa napili mong filters. Subukang baguhin o i-reset ang filters.</p>
+            </div>
+        `;
+    } else {
+        reportsGrid.innerHTML = filtered.map(createReportCard).join("");
+    }
+
+    reportCountLabel.textContent = `${filtered.length} of ${latestReports.length} Reports`;
+
+    const descriptions = [];
+
+    if (selectedStatus !== "all") descriptions.push(selectedStatus);
+    if (selectedUrgency === "urgent") descriptions.push("Urgent Only");
+    if (selectedUrgency === "normal") descriptions.push("Normal Only");
+
+    filterSummary.textContent = descriptions.length
+        ? "Filters: " + descriptions.join(" • ")
+        : "Showing all reports";
+
+    if (selectedSort === "urgent-first") {
+        filterSummary.textContent += " • Urgent First";
+    }
+
+    if (selectedSort === "id-desc") {
+        filterSummary.textContent += " • Newest ID First";
+    }
+
+    if (selectedSort === "id-asc") {
+        filterSummary.textContent += " • Oldest ID First";
+    }
+}
+
+statusFilter.addEventListener("change", applyReportFilters);
+urgentFilter.addEventListener("change", applyReportFilters);
+sortFilter.addEventListener("change", applyReportFilters);
+
+resetFilters.addEventListener("click", () => {
+    statusFilter.value = "all";
+    urgentFilter.value = "all";
+    sortFilter.value = "default";
+    applyReportFilters();
+});
+
+function updateUrgentReports(reports) {
+    const urgent = reports.filter(r => Boolean(r.is_urgent));
+
+    document.getElementById("urgentCount").textContent = urgent.length + " Urgent";
+    document.getElementById("urgentReports").textContent = urgent.length;
+
+    if (urgent.length === 0) {
+        urgentList.innerHTML =
+            '<div class="urgent-empty">✓ No urgent reports at the moment.</div>';
+        return;
+    }
+
+    urgentList.innerHTML = urgent.map(r => `
+        <div class="urgent-item">
+            <strong>${escapeHTML(r.id)}</strong>
+            <span class="urgent-badge">URGENT</span>
+            <p>Resident: ${escapeHTML(r.fullname)}</p>
+            <p>Location: ${escapeHTML(r.sitio)}</p>
+            <p>Description: ${escapeHTML(r.description)}</p>
+            <p>Pending Duration: <strong>${escapeHTML(r.duration)}</strong></p>
+        </div>
+    `).join("");
+}
+
+async function refreshDashboard(force = false) {
+    if (dashboardRequestRunning) {
+        if (force) dashboardRefreshPending = true;
+        return;
+    }
+
+    const fileInputs = document.querySelectorAll('input[name="clean-image"]');
+    const hasSelectedPhoto = Array.from(fileInputs).some(
+        input => input.files && input.files.length > 0
+    );
+
+    const active = document.activeElement;
+
+    if (
+        !force &&
+        (hasSelectedPhoto ||
+        (active && active.matches('input[name="clean-image"]')))
+    ) {
+        return;
+    }
+
+    dashboardRequestRunning = true;
+
+    try {
+        const response = await fetch("/api/admin/reports", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch reports.");
+        }
+
+        const data = await response.json();
+
+        if (data.success === false) {
+            throw new Error(data.message || "Dashboard update failed.");
+        }
+
+        latestReports = Array.isArray(data.reports) ? data.reports : [];
+
+        registerReports(latestReports);
+
+        document.getElementById("totalReports").textContent =
+            data.total_reports ?? latestReports.length;
+
+        document.getElementById("pendingReports").textContent =
+            data.pending_reports ?? latestReports.filter(r => r.status === "Pending").length;
+
+        document.getElementById("inProgressReports").textContent =
+            data.in_progress_reports ?? latestReports.filter(r => r.status === "In Progress").length;
+
+        document.getElementById("completedReports").textContent =
+            data.completed_reports ?? latestReports.filter(r => r.status === "Completed").length;
+
+        updateUrgentReports(latestReports);
+        applyReportFilters();
+
+        document.getElementById("lastUpdated").textContent =
+            new Date().toLocaleTimeString();
+    } catch (error) {
+        console.error("Dashboard update error:", error);
+        document.getElementById("lastUpdated").textContent = "Connection error";
+    } finally {
+        dashboardRequestRunning = false;
+
+        if (dashboardRefreshPending) {
+            dashboardRefreshPending = false;
+            refreshDashboard(true);
+        }
+    }
+}
+
+/* START CLEANING: AJAX request without page reload */
+reportsGrid.addEventListener("submit", async event => {
+    const form = event.target.closest(".start-cleaning-form");
+    if (!form) return;
+
+    event.preventDefault();
+
+    if (isStartingReport) return;
+
+    isStartingReport = true;
+
+    const button = form.querySelector("button[type='submit']");
+    const originalText = button ? button.textContent : "";
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Updating...";
+    }
+
+    try {
+        const response = await fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "Accept": "application/json"
+            },
+            credentials: "same-origin"
+        });
+
+        let data;
+
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error(
+                "Hindi JSON ang response ng server. Tingnan ang start_cleaning route sa app.py."
+            );
+        }
+
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Hindi na-update ang report status.");
+        }
+
+        showActionMessage(
+            data.message || "Report status updated to In Progress!",
+            "success"
+        );
+
+        /* Force refresh kahit may naunang dashboard request. */
+        await refreshDashboard(true);
+        await refreshNotifications();
+    } catch (error) {
+        console.error("Start cleaning error:", error);
+
+        showActionMessage(
+            error.message || "Hindi na-update ang report. Pakisubukan ulit.",
+            "error"
+        );
+
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    } finally {
+        isStartingReport = false;
+    }
+});
+
+/* COMPLETE REPORT: normal form submission is retained.
+   Huwag mag-refresh habang pumipili o nag-a-upload ng larawan. */
+reportsGrid.addEventListener("change", event => {
+    if (event.target.matches('input[name="clean-image"]')) {
+        const input = event.target;
+        const form = input.closest("form");
+
+        if (form) {
+            const button = form.querySelector("button[type='submit']");
+            if (button) {
+                button.disabled = false;
+                button.textContent = "✓ Complete Report";
+            }
+        }
+    }
+});
+
+reportsGrid.addEventListener("submit", event => {
+    const form = event.target.closest(".complete-report-form");
+    if (!form) return;
+
+    const input = form.querySelector('input[name="clean-image"]');
+
+    if (!input || !input.files || input.files.length === 0) {
+        event.preventDefault();
+        showActionMessage("Pumili muna ng after-cleaning photo.", "error");
+        return;
+    }
+
+    const button = form.querySelector("button[type='submit']");
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Uploading...";
+    }
+});
+
+/* PHOTO PREVIEW */
+document.addEventListener("click", event => {
+    const photo = event.target.closest(".report-photo");
+    if (!photo) return;
+
+    event.preventDefault();
+
+    photoModal.classList.add("show");
+    modalPhoto.src = photo.src;
+    modalPhoto.alt = photo.alt || "Report photo";
+});
+
+function closeModal() {
+    photoModal.classList.remove("show");
+    modalPhoto.src = "";
+}
+
+closePhotoModal.addEventListener("click", closeModal);
+
+photoModal.addEventListener("click", event => {
+    if (event.target === photoModal) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closeModal();
+
+        notificationPanelOpen = false;
+        notificationPanel.classList.remove("show");
+        notificationBell.setAttribute("aria-expanded", "false");
+    }
+});
+
+/* INITIALIZATION */
+initializeOrder();
+restoreFilters();
+refreshDashboard(true);
+refreshNotifications();
+
+setInterval(() => refreshDashboard(false), 5000);
+setInterval(refreshNotifications, 5000);
+</script>
+
+</body>
+</html>
+```
